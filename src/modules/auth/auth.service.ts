@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { OTP_REPOSITORY, USER_REPOSITORY } from 'src/modules/user/constants/token.constant';
+import { IUserRepository } from 'src/modules/user/interfaces/user-repository.interface';
+import { IOtpRepository } from 'src/modules/user/interfaces/otp-repository.interface';
+import { IAuthService } from './interfaces/auth-service.interface';
 
 @Injectable()
-export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+export class AuthService implements IAuthService {
+    constructor(
+        @Inject(USER_REPOSITORY) private userRepository: IUserRepository,
+        @Inject(OTP_REPOSITORY) private otpRepository: IOtpRepository
+    ) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+    sendOtp(): Promise<void> {
+        return
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    checkOtp(): Promise<void> {
+        return
+    }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    refreshToken(): Promise<void> {
+        return
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+    logout(): Promise<void> {
+        return
+    }
 }

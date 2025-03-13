@@ -6,8 +6,8 @@ export const SwaggerConfigInit = (app:INestApplication) => {
     const document = new DocumentBuilder()
         .setTitle('Kalapji Game API')
         .setDescription('API documentation for Kalapji Game')
-        .setVersion('1.0')
-        .addBearerAuth()
+        .setVersion('v1.0.0')
+        .addBearerAuth(swaggerAuthConfig(), "Authorization")
         .build();
     const swaggerDocument = SwaggerModule.createDocument(app, document);
     SwaggerModule.setup('swagger', app, swaggerDocument);

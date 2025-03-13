@@ -14,7 +14,7 @@ import { TypeOrmConfig } from 'src/configs/typeorm.config';
       useFactory: (configService:ConfigService) => TypeOrmConfig(configService),
       inject: [ConfigService]
     }),
-    AuthModule, 
+    AuthModule,
     UserModule
   ],
   controllers: [],

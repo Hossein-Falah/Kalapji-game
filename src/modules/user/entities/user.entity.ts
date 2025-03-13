@@ -1,7 +1,8 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToOne } from "typeorm";
 import { EntityNames } from "src/common/enums/entity.enum";
 import { AbstractEntity } from "src/common/abstracts/base.entity";
 import { Roles } from "src/common/enums/role.enum";
+import { OtpEntity } from "./otp.entity";
 
 @Entity(EntityNames.User)
 export class UserEntity extends AbstractEntity {
@@ -15,4 +16,6 @@ export class UserEntity extends AbstractEntity {
     role:string;
     @Column({ nullable: true })
     password:string;
+    @OneToOne(() => OtpEntity, otp => otp.user, { onDelete: "CASCADE" })
+    otp:OtpEntity;
 }

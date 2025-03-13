@@ -1,34 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Controller, Inject, Post } from '@nestjs/common';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { SwaggerConsmes } from 'src/common/enums/swagger.consumes.enum';
+import { AUTH_SERVICE } from './constants/token.constant';
+import { IAuthService } from './interfaces/auth-service.interface';
 
 @Controller('auth')
+@ApiTags("Auth 🔒")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(@Inject(AUTH_SERVICE) private authService: IAuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Post('/send-otp')
+  @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
+  sendOtp() {
+    return this.authService.sendOtp();
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Post('/check-otp')
+  @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
+  checkOtp() {
+    return this.authService.checkOtp();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @Post('/refresh-token')
+  @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
+  refreshToken() {
+    return this.authService.refreshToken();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Post('/logout')
+  @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
+  logout() {
+    return this.authService.logout();
   }
 }
