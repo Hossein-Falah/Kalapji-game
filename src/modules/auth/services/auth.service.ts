@@ -1,6 +1,6 @@
 import { randomInt } from 'crypto';
 import { Request, Response } from 'express';
-import { BadRequestException, ForbiddenException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { OTP_REPOSITORY, USER_SERVICE } from 'src/modules/user/constants/token.constant';
 import { IOtpRepository } from 'src/modules/user/interfaces/otp-repository.interface';
 import { AuthMessages, UserMessages } from 'src/common/enums/message.enum';
@@ -28,7 +28,10 @@ export class AuthService implements IAuthService {
             user = await this.userService.createUser(phone);
         }
 
-        await this.checkExpiredOtp(user.id);
+        const existingOtp = await this.otpRepository.findByOtpId(user.id)
+        if (existingOtp && existingOtp.expiresIn > new Date()) {
+            throw new BadRequestException(AuthMessages.OTP_ALREADY_SENT)
+        }
 
         const otp = await this.sendOtpSms(user.id);
 
@@ -119,7 +122,6 @@ export class AuthService implements IAuthService {
         const expiresIn = new Date(Date.now() + (1000 * 60 * 2));
         
         let otp = await this.otpRepository.findByOtpId(userId);
-        
         if (otp) {
             otp.code = +code;
             otp.expiresIn = expiresIn;
@@ -130,15 +132,6 @@ export class AuthService implements IAuthService {
         await this.save(otp);
 
         return otp;
-    }
-
-    async checkExpiredOtp(userId:string): Promise<void> {
-        const now = new Date().getTime();
-        const otp = await this.otpRepository.findByOtpId(userId);
-
-        if (otp?.expiresIn?.getTime() > now) {
-            throw new ForbiddenException(AuthMessages.OTP_EXPIRED);
-        }
     }
 
     async save(otp: OtpEntity) {
