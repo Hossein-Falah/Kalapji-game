@@ -1,11 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 
 import { UserEntity } from './entities/user.entity';
 import { IUserService } from './interfaces/user-service.interface';
 import { USER_REPOSITORY } from './constants/token.constant';
 import { IUserRepository } from './interfaces/user-repository.interface';
-import { AuthService } from '../auth/auth.service';
 import { AUTH_SERVICE } from '../auth/constants/token.constant';
+import { AuthService } from '../auth/services/auth.service';
+import { UserMessages } from 'src/common/enums/message.enum';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -21,6 +22,14 @@ export class UserService implements IUserService {
   async createUser(phone:string): Promise<UserEntity> {
     const user = await this.userRepository.createUser(phone);
     await this.authService.sendOtpSms(user.id);
+    return user;
+  }
+
+  async ensureUserExists(phone:string): Promise<UserEntity> {
+    const user = await this.findByPhone(phone);
+    if (!user) {
+      throw new BadRequestException(UserMessages.USER_NOT_FOUND)
+    }
     return user;
   }
 }

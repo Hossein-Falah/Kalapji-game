@@ -10,7 +10,7 @@ export class OtpRepository implements IOtpRepository {
         @InjectRepository(OtpEntity) private otpModel: Repository<OtpEntity>
     ) {}
 
-    public async createOtp(userId:string, code:string, expiresIn:Date): Promise<OtpEntity> {
+    public async createOtp(userId:string, code:number, expiresIn:Date): Promise<OtpEntity> {
         const otp = this.otpModel.create({
             userId,
             code,

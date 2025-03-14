@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsPhoneNumber, IsString } from "class-validator";
+import { IsNumber, IsPhoneNumber, IsString } from "class-validator";
 
 export class SendOtpDto {
     @ApiProperty({
@@ -11,4 +11,24 @@ export class SendOtpDto {
     @IsString({ message: "شماره تماس باید به صورت عدد وارد شود" })
     @IsPhoneNumber("IR", { message: "لطفا شماره تماس خود را به صورت صحیح وارد کنید" })
     phone: string;
+}
+
+export class CheckOtpDto {
+    @ApiProperty({
+        description: "The phone number of the user",
+        example: "+201010101010",
+        type: String,
+        required: true,
+    })
+    @IsString({ message: "شماره تماس باید به صورت عدد وارد شود" })
+    @IsPhoneNumber("IR", { message: "لطفا شماره تماس خود را به صورت صحیح وارد کنید" })
+    phone: string;
+    @ApiProperty({
+        description: "The code of the user",
+        example: "12345",
+        type: Number,
+        required: true,
+    })
+    @IsNumber({}, { message: "کد تایید باید به صورت عدد وارد شود" })
+    code: number;
 }

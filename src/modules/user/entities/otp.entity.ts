@@ -6,7 +6,7 @@ import { AbstractEntity } from "src/common/abstracts/base.entity";
 @Entity(EntityNames.Otp)
 export class OtpEntity extends AbstractEntity {
     @Column()
-    code:string;
+    code:number;
     @Column({ nullable: true })
     expiresIn:Date;
     @Column()

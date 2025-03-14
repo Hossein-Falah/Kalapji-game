@@ -3,8 +3,10 @@ import { USER_REPOSITORY, USER_SERVICE, OTP_REPOSITORY } from "./constants/token
 import { UserService } from "./user.service";
 import { UserRepository } from "./repository/user.repository";
 import { OtpRepository } from "./repository/otp.repository";
-import { AUTH_SERVICE } from "../auth/constants/token.constant";
-import { AuthService } from "../auth/auth.service";
+import { AUTH_SERVICE, JWT_SERVICE, TOKEN_SERVICE } from "../auth/constants/token.constant";
+import { AuthService } from "../auth/services/auth.service";
+import { TokenService } from "../auth/services/token.service";
+import { JwtService } from "@nestjs/jwt";
 
 export const providers: Provider[] = [
     {
@@ -22,5 +24,13 @@ export const providers: Provider[] = [
     {
         provide: OTP_REPOSITORY,
         useClass: OtpRepository
+    },
+    {
+        provide: TOKEN_SERVICE,
+        useClass: TokenService
+    },
+    {
+        provide: JWT_SERVICE,
+        useClass: JwtService
     }
 ]
