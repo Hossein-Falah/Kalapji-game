@@ -1,8 +1,9 @@
-import { Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { SwaggerConsmes } from 'src/common/enums/swagger.consumes.enum';
 import { AUTH_SERVICE } from './constants/token.constant';
 import { IAuthService } from './interfaces/auth-service.interface';
+import { SendOtpDto } from './dto/auth.dto';
 
 @Controller('auth')
 @ApiTags("Auth 🔒")
@@ -11,8 +12,8 @@ export class AuthController {
 
   @Post('/send-otp')
   @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
-  sendOtp() {
-    return this.authService.sendOtp();
+  sendOtp(@Body() sendOtpDto:SendOtpDto) {
+    return this.authService.sendOtp(sendOtpDto);
   }
 
   @Post('/check-otp')
