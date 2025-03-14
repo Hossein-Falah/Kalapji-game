@@ -1,5 +1,5 @@
 import { randomInt } from 'crypto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { BadRequestException, ForbiddenException, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { OTP_REPOSITORY, USER_SERVICE } from 'src/modules/user/constants/token.constant';
 import { IOtpRepository } from 'src/modules/user/interfaces/otp-repository.interface';
@@ -101,8 +101,17 @@ export class AuthService implements IAuthService {
 
     }
 
-    logout(): Promise<void> {
-        return
+    async logout(req: Request, res: Response): Promise<void> {
+        const refreshToken = req.cookies?.refreshToken;
+
+        if (!refreshToken) throw new BadRequestException(AuthMessages.LOGOUT_FAILED);
+
+        res.clearCookie('accessToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        res.clearCookie('refreshToken', { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+
+        res.json({
+            message: AuthMessages.LOGOUT_SUCCESS
+        })
     }
 
     async sendOtpSms(userId: string): Promise<OtpEntity> {

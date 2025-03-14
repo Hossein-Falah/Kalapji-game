@@ -1,5 +1,5 @@
-import { Response } from 'express';
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
+import { Body, Controller, Inject, Post, Req, Res } from '@nestjs/common';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { SwaggerConsmes } from 'src/common/enums/swagger.consumes.enum';
 import { AUTH_SERVICE } from './constants/token.constant';
@@ -31,7 +31,7 @@ export class AuthController {
 
   @Post('/logout')
   @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
-  logout(@Res() res:Response) {
-    return this.authService.logout(res);
+  logout(@Req() req:Request, @Res() res:Response) {
+    return this.authService.logout(req, res);
   }
 }
