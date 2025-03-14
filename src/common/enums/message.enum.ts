@@ -7,7 +7,8 @@ export enum AuthMessages {
     OTP_SENT = "کد تایید ارسال شد",
     OTP_INCORRECT = "کد تایید اشتباه است",
     LOGIN_AGAIN = "لطفا دوباره وارد شوید",
-    LOGIN_SUCCESS = "ورود با موفقیت انجام شد"
+    LOGIN_SUCCESS = "ورود با موفقیت انجام شد",
+    REFRESH_TOKEN_SUCCESS = "توکن رفرش شد"
 }
 
 export enum TokenMessages {

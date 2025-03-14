@@ -34,16 +34,6 @@ export class TokenService {
         }
     }
 
-    public verifyAccessToken(token:string) {
-        try {
-            return this.jwtService.verify(token, {
-                secret: this.configService.get<string>("JWT_ACCESS_SECRET")
-            })
-        } catch (error) {
-            throw new BadRequestException(TokenMessages.SOMETHING_WENT_WRONG)
-        }
-    }
-
     public verifyRefreshToken(token:string) {
         try {
             return this.jwtService.verify(token, {

@@ -3,10 +3,10 @@ import { Response } from 'express';
 import { BadRequestException, ForbiddenException, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { OTP_REPOSITORY, USER_SERVICE } from 'src/modules/user/constants/token.constant';
 import { IOtpRepository } from 'src/modules/user/interfaces/otp-repository.interface';
-import { AuthMessages } from 'src/common/enums/message.enum';
+import { AuthMessages, UserMessages } from 'src/common/enums/message.enum';
 import { IAuthService } from '../interfaces/auth-service.interface';
 import { UserService } from 'src/modules/user/user.service';
-import { CheckOtpDto, SendOtpDto } from '../dto/auth.dto';
+import { CheckOtpDto, SendOtpDto, TokenDto } from '../dto/auth.dto';
 import { OtpEntity } from 'src/modules/user/entities/otp.entity';
 import { TokenService } from './token.service';
 import { TOKEN_SERVICE } from '../constants/token.constant';
@@ -72,8 +72,33 @@ export class AuthService implements IAuthService {
         })
     }
 
-    refreshToken(): Promise<void> {
-        return
+    async refreshToken(tokenDto:TokenDto, res:Response): Promise<void> {
+        const { refreshToken } = tokenDto;
+        const { phone } = this.tokenService.verifyRefreshToken(refreshToken);        
+        const user = await this.userService.findByPhone(phone)
+        if (!user) throw new BadRequestException(UserMessages.USER_NOT_FOUND)
+
+        const newAccessToken = this.tokenService.generateAccessToken({ phone });
+        const newRefreshToken = this.tokenService.generateRefreshToken({ phone });
+        
+        res.cookie('accessToken', newAccessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+        
+        res.cookie('refreshToken', newRefreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+        
+        res.json({
+            message: AuthMessages.REFRESH_TOKEN_SUCCESS,
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken
+        })
+
     }
 
     logout(): Promise<void> {

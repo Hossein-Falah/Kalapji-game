@@ -32,3 +32,13 @@ export class CheckOtpDto {
     @IsNumber({}, { message: "کد تایید باید به صورت عدد وارد شود" })
     code: number;
 }
+
+export class TokenDto {
+    @ApiProperty({
+        description: "The access token of the user",
+        example: "so9hijoi(*&ff.si89g8y.I(h9o",
+        type: String,
+        required: true,
+    })
+    refreshToken: string;
+}

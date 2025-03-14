@@ -4,7 +4,7 @@ import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { SwaggerConsmes } from 'src/common/enums/swagger.consumes.enum';
 import { AUTH_SERVICE } from './constants/token.constant';
 import { IAuthService } from './interfaces/auth-service.interface';
-import { CheckOtpDto, SendOtpDto } from './dto/auth.dto';
+import { CheckOtpDto, SendOtpDto, TokenDto } from './dto/auth.dto';
 
 @Controller('auth')
 @ApiTags("Auth 🔒")
@@ -25,13 +25,13 @@ export class AuthController {
 
   @Post('/refresh-token')
   @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
-  refreshToken() {
-    return this.authService.refreshToken();
+  refreshToken(@Body() tokenDto:TokenDto, @Res() res:Response) {
+    return this.authService.refreshToken(tokenDto, res);
   }
 
   @Post('/logout')
   @ApiConsumes(SwaggerConsmes.UrlEncoded, SwaggerConsmes.Json)
-  logout() {
-    return this.authService.logout();
+  logout(@Res() res:Response) {
+    return this.authService.logout(res);
   }
 }
