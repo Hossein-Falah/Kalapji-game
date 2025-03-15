@@ -1,4 +1,5 @@
 export enum EntityNames {
     User="user",
-    Otp="otp"
+    Otp="otp",
+    Categories="categories"
 }
