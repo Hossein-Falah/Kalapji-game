@@ -3,8 +3,8 @@ import { BaseEntity, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn 
 export abstract class AbstractEntity extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id:string;
-    @CreateDateColumn({ type: "timestamp" })
+    @CreateDateColumn()
     createdAt:Date;
-    @UpdateDateColumn({ type: "timestamp" })
+    @UpdateDateColumn()
     updatedAt:Date;
 }

@@ -15,7 +15,7 @@ export class UserService implements IUserService {
     @Inject(AUTH_SERVICE) private authService: AuthService
   ) {}
 
-    async findByPhone(phone:string): Promise<UserEntity | null> {
+  async findByPhone(phone:string): Promise<UserEntity | null> {
     return this.userRepository.findByPhone(phone);
   }
 

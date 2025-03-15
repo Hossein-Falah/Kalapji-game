@@ -7,6 +7,5 @@ export interface IAuthService {
     checkOtp(checkOtpDto:CheckOtpDto, res:Response): Promise<void>;
     refreshToken(tokenDto:TokenDto, res:Response): Promise<void>;
     logout(req:Request, res:Response): Promise<void>;
-    checkExpiredOtp(userId:string): Promise<void>;
     sendOtpSms(userId:string): Promise<OtpEntity>;
 }
