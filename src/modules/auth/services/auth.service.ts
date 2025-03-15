@@ -28,11 +28,6 @@ export class AuthService implements IAuthService {
             user = await this.userService.createUser(phone);
         }
 
-        const existingOtp = await this.otpRepository.findByOtpId(user.id)
-        if (existingOtp && existingOtp.expiresIn > new Date()) {
-            throw new BadRequestException(AuthMessages.OTP_ALREADY_SENT)
-        }
-
         const otp = await this.sendOtpSms(user.id);
 
         return {
